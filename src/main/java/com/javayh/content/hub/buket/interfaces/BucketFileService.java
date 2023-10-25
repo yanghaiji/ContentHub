@@ -34,7 +34,7 @@ public interface BucketFileService {
      * 文件上传
      *
      * @param multipartFiles 上传的文件
-     * @param bucketName    name
+     * @param bucketName     name
      * @return {@link Result} 统一的返回
      */
     Result fileUpload(List<MultipartFile> multipartFiles, String bucketName);
@@ -47,4 +47,14 @@ public interface BucketFileService {
      * @return {@link Result} 统一的返回
      */
     Result fileDownLoad(String bucketName, String key);
+
+
+    /**
+     * 删除文件
+     *
+     * @param bucketName name
+     * @param key        bucket 的唯一标识
+     * @return {@link Result} 统一的返回
+     */
+    Result fileDelete(String bucketName, String key);
 }

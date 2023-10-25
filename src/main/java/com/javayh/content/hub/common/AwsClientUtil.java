@@ -48,34 +48,12 @@ public class AwsClientUtil {
             ClientConfiguration clientConfiguration = new ClientConfiguration();
             clientConfiguration.setProtocol(Protocol.HTTP);
             AwsClientBuilder.EndpointConfiguration endpointConfiguration =
-                    new AwsClientBuilder.EndpointConfiguration(awsClientUtil.bucketProperties.getEndpoint(), null);
+                    new AwsClientBuilder.EndpointConfiguration(awsClientUtil.bucketProperties.getEndpoint(), awsClientUtil.bucketProperties.getRegions());
             return AmazonS3ClientBuilder.standard().withCredentials(credentialsProvider)
                     .withEndpointConfiguration(endpointConfiguration).withClientConfiguration(clientConfiguration).build();
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public static AmazonS3 s3Client(final String hosts, final String accessKey, final String secretKey) {
-        if (StringUtils.isNotBlank(hosts) && StringUtils.isNotBlank(accessKey) && StringUtils.isNotBlank(secretKey)) {
-            AWSCredentialsProvider credentialsProvider = new AWSCredentialsProvider() {
-                @Override
-                public AWSCredentials getCredentials() {
-                    return new BasicAWSCredentials(accessKey, secretKey);
-                }
-
-                @Override
-                public void refresh() {
-                }
-            };
-            ClientConfiguration clientConfiguration = new ClientConfiguration();
-            clientConfiguration.setProtocol(Protocol.HTTP);
-            AwsClientBuilder.EndpointConfiguration endpointConfiguration = new AwsClientBuilder.EndpointConfiguration(hosts, null);
-            return AmazonS3ClientBuilder.standard()
-                    .withCredentials(credentialsProvider).withEndpointConfiguration(endpointConfiguration).withClientConfiguration(clientConfiguration).build();
-        }
-        return null;
-
     }
 
 }

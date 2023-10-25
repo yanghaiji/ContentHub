@@ -16,6 +16,7 @@
         <hutool-all.version>4.5.15</hutool-all.version>
         <aws-java-sdk-s3.version>1.11.762</aws-java-sdk-s3.version>
         <commons-fileupload.version>1.4</commons-fileupload.version>
+        <mybatis-plus.version>3.3.2</mybatis-plus.version>
     </properties>
 
     <dependencies>
@@ -60,6 +61,15 @@
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>${commons-fileupload.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
         </dependency>
     </dependencies>
 

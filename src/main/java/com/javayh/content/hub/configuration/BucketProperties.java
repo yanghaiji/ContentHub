@@ -39,6 +39,13 @@ public class BucketProperties {
     private String endpoint;
 
     /**
+     * 存储后图片访问的url前缀
+     */
+    private String imageUrl;
+
+    private String regions;
+
+    /**
      * 存储桶的类型
      */
     private BucketType bucketType;
