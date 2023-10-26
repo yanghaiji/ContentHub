@@ -9,7 +9,6 @@ import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.javayh.content.hub.configuration.BucketProperties;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -17,7 +16,10 @@ import javax.annotation.Resource;
 
 /**
  * Aws工具类
+ *
+ * @author haiji
  */
+
 
 @Component
 public class AwsClientUtil {

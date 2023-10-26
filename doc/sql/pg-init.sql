@@ -1,5 +1,6 @@
 CREATE TABLE content_hub_images_config (
     id SERIAL PRIMARY KEY,
+    bucket_type VARCHAR(8) NOT NULL,
     bucket_name VARCHAR(255) NOT NULL,
     object_key VARCHAR(255) NOT NULL,
     image_url VARCHAR(255),

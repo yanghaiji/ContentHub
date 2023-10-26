@@ -1,6 +1,6 @@
 package com.javayh.content.hub.api;
 
-import com.javayh.content.hub.buket.interfaces.BucketFileService;
+import com.javayh.content.hub.buket.BucketFileStrategySelector;
 import com.javayh.content.hub.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,7 @@ import java.util.List;
 public class FileBucketApiController {
 
     @Autowired
-    private BucketFileService bucketFileService;
+    private BucketFileStrategySelector bucketFileService;
 
     /**
      * 获取bucket内的所有对象
@@ -31,8 +31,8 @@ public class FileBucketApiController {
      * @return {@link Result} 统一的返回
      */
     @GetMapping(value = "/list")
-    public Result bucketFileList(String bucketName) {
-        return bucketFileService.bucketFileList(bucketName);
+    public Result bucketFileList(String type, String bucketName) {
+        return bucketFileService.getBucketFileService(type).bucketFileList(type, bucketName);
     }
 
     /**
@@ -43,8 +43,8 @@ public class FileBucketApiController {
      * @return {@link Result} 统一的返回
      */
     @PostMapping(value = "/upload")
-    public Result fileUpload(MultipartFile multipartFile, String bucketName) {
-        return bucketFileService.fileUpload(multipartFile, bucketName);
+    public Result fileUpload(MultipartFile multipartFile, String bucketName, String type) {
+        return bucketFileService.getBucketFileService(type).fileUpload(type, multipartFile, bucketName);
     }
 
     /**
@@ -55,8 +55,8 @@ public class FileBucketApiController {
      * @return {@link Result} 统一的返回
      */
     @PostMapping(value = "/uploads")
-    public Result fileUpload(List<MultipartFile> multipartFiles, String bucketName) {
-        return bucketFileService.fileUpload(multipartFiles, bucketName);
+    public Result fileUpload(List<MultipartFile> multipartFiles, String bucketName, String type) {
+        return bucketFileService.getBucketFileService(type).fileUpload(type, multipartFiles, bucketName);
     }
 
     /**
@@ -67,8 +67,8 @@ public class FileBucketApiController {
      * @return {@link Result} 统一的返回
      */
     @GetMapping(value = "/download")
-    public Result fileDownLoad(String bucketName, String key) {
-        return bucketFileService.fileDownLoad(bucketName, key);
+    public Result fileDownLoad(String bucketName, String key, String type) {
+        return bucketFileService.getBucketFileService(type).fileDownLoad(type, bucketName, key);
     }
 
     /**
@@ -79,7 +79,7 @@ public class FileBucketApiController {
      * @return {@link Result} 统一的返回
      */
     @DeleteMapping(value = "/del")
-    public Result fileDelete(String bucketName, String key) {
-        return bucketFileService.fileDelete(bucketName, key);
+    public Result fileDelete(String bucketName, String key, String type) {
+        return bucketFileService.getBucketFileService(type).fileDelete(type, bucketName, key);
     }
 }

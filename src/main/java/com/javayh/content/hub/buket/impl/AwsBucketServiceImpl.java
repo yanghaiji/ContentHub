@@ -1,4 +1,4 @@
-package com.javayh.content.hub.buket;
+package com.javayh.content.hub.buket.impl;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
