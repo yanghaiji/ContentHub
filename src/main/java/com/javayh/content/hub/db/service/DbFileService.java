@@ -30,4 +30,14 @@ public interface DbFileService extends IService<ContentHubImages> {
      */
     Result bucketListInfo();
 
+    /**
+     * 删除
+     *
+     * @param id         数据id
+     * @param bucketType bucket 类型
+     * @param bucketName bucket 名字
+     * @param objectKey  文件 名字
+     * @return {@link Result}
+     */
+    Result remove(Long id, String bucketType, String bucketName, String objectKey);
 }

@@ -1,10 +1,13 @@
 package com.javayh.content.hub.db.api;
 
+import com.javayh.content.hub.buket.BucketFileStrategySelector;
 import com.javayh.content.hub.common.Result;
 import com.javayh.content.hub.db.service.DbFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * <p>
@@ -21,6 +24,9 @@ public class DbFileApiController {
 
     @Autowired
     private DbFileService dbFileService;
+
+    @Autowired
+    private BucketFileStrategySelector bucketFileService;
 
     @GetMapping(value = "/bu/info")
     public Result bucketList() {
@@ -43,17 +49,24 @@ public class DbFileApiController {
      *
      * @param id 数据id
      */
-    @DeleteMapping(value = "/bu/del/{id}")
-    public Result bucketDelById(@PathVariable(value = "id") Long id) {
-        dbFileService.removeById(id);
-        return Result.ok();
+    @DeleteMapping(value = "/bu/del")
+    public Result bucketDelById(@RequestParam(value = "id") Long id,
+                                @RequestParam (value = "bucketType") String bucketType,
+                                @RequestParam (value = "bucketName") String bucketName,
+                                @RequestParam (value = "objectKey") String objectKey) {
+        return Result.ok(bucketFileService.getBucketFileService(bucketType).fileDelete(bucketType, bucketName, objectKey));
     }
 
+    /**
+     * 上传文件
+     *
+     * @param file       文件列表
+     * @param bucketName 上传的bucket 名字
+     * @param bucketType bucket 的类型
+     */
     @PostMapping(value = "/bu/upload")
-    public Result upload(MultipartFile file, String bucketName, String bucketType) {
-        System.out.println(bucketName);
-        System.out.println(bucketType);
-        return Result.ok();
+    public Result upload(List<MultipartFile> file, String bucketName, String bucketType) {
+        return Result.ok(bucketFileService.getBucketFileService(bucketType).fileUpload(bucketType,file,bucketName));
     }
 
 

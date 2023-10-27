@@ -1,9 +1,11 @@
 package com.javayh.content.hub.buket;
 
 import com.javayh.content.hub.buket.impl.AwsFileBucketServiceImpl;
+import com.javayh.content.hub.buket.impl.LocalFileBucketServiceImpl;
 import com.javayh.content.hub.buket.impl.OssFileBucketServiceImpl;
 import com.javayh.content.hub.buket.interfaces.BucketFileService;
 import com.javayh.content.hub.exception.BucketStateException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,16 +18,13 @@ import org.springframework.stereotype.Component;
  * @since 2023-10-25
  */
 @Component
+@AllArgsConstructor
 public class BucketFileStrategySelector {
 
     private final AwsFileBucketServiceImpl awsFileBucketService;
     private final OssFileBucketServiceImpl ossFileBucketService;
+    private final LocalFileBucketServiceImpl localFileBucketService;
 
-    public BucketFileStrategySelector(AwsFileBucketServiceImpl awsFileBucketService,
-                                      OssFileBucketServiceImpl ossFileBucketService) {
-        this.awsFileBucketService = awsFileBucketService;
-        this.ossFileBucketService = ossFileBucketService;
-    }
 
     /**
      * 数据初始化
@@ -38,6 +37,9 @@ public class BucketFileStrategySelector {
                 break;
             case "OSS":
                 bucketFileService = ossFileBucketService;
+                break;
+            case "LOCAL":
+                bucketFileService = localFileBucketService;
                 break;
             default:
                 throw new BucketStateException("Unexpected value: " + type);
