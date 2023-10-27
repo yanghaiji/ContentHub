@@ -1,4 +1,4 @@
-package com.javayh.content.hub.buket;
+package com.javayh.content.hub.buket.impl;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.model.*;
@@ -39,11 +39,12 @@ public class AwsFileBucketServiceImpl implements BucketFileService {
     /**
      * 获取bucket内的所有对象
      *
+     * @param type       bucket 类型
      * @param bucketName name
      * @return {@link Result} 统一的返回
      */
     @Override
-    public Result bucketFileList(String bucketName) {
+    public Result bucketFileList(String type, String bucketName) {
         ObjectListing objectListing = AwsClientUtil.s3Client().listObjects(bucketName);
         List<String> objectKeys = new ArrayList<>();
         for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
@@ -55,21 +56,28 @@ public class AwsFileBucketServiceImpl implements BucketFileService {
     /**
      * 文件上传
      *
+     * @param type          bucket 类型
      * @param multipartFile 上传的文件
      * @param bucketName    name
      * @return {@link Result} 统一的返回
      */
     @Override
-    public Result fileUpload(MultipartFile multipartFile, String bucketName) {
+    public Result fileUpload(String type, MultipartFile multipartFile, String bucketName) {
         try {
             String fileName = multipartFile.getOriginalFilename();
             InputStream fileInputStream = multipartFile.getInputStream();
             ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType("image/jpeg");
             PutObjectRequest request = new PutObjectRequest(bucketName, fileName, fileInputStream, metadata);
+            // 临时的url
+//            GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, fileName);
+//            URL objectUrl = AwsClientUtil.s3Client().generatePresignedUrl(generatePresignedUrlRequest);
+
             AwsClientUtil.s3Client().putObject(request);
             // 存入数据库
             ContentHubImages image = new ContentHubImages();
             image.setBucketName(bucketName);
+            image.setBucketType(type);
             image.setObjectKey(fileName);
             image.setImageUrl(aggUrl(bucketName, fileName));
             image.setDescription(fileName);
@@ -85,13 +93,14 @@ public class AwsFileBucketServiceImpl implements BucketFileService {
      * 文件上传
      *
      * @param multipartFiles 上传的文件
+     * @param type           bucket 类型
      * @param bucketName     name
      * @return {@link Result} 统一的返回
      */
     @Override
-    public Result fileUpload(List<MultipartFile> multipartFiles, String bucketName) {
+    public Result fileUpload(String type, List<MultipartFile> multipartFiles, String bucketName) {
         for (MultipartFile file : multipartFiles) {
-            fileUpload(file, bucketName);
+            fileUpload(type, file, bucketName);
         }
         return Result.ok("All files uploaded successfully");
     }
@@ -101,10 +110,11 @@ public class AwsFileBucketServiceImpl implements BucketFileService {
      *
      * @param bucketName name
      * @param key        bucket 的唯一标识
+     * @param type       bucket 类型
      * @return {@link Result} 统一的返回
      */
     @Override
-    public Result fileDownLoad(String bucketName, String key) {
+    public Result fileDownLoad(String type, String bucketName, String key) {
         try {
             AwsClientUtil.s3Client().getObject(bucketName, key);
             return Result.ok("File download successful");
@@ -116,18 +126,21 @@ public class AwsFileBucketServiceImpl implements BucketFileService {
     /**
      * 删除文件
      *
+     * @param type       bucket 类型
      * @param bucketName name
      * @param key        bucket 的唯一标识
      * @return {@link Result} 统一的返回
      */
     @Override
-    public Result fileDelete(String bucketName, String key) {
+    public Result fileDelete(String type, String bucketName, String key) {
         try {
             DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, key);
             AwsClientUtil.s3Client().deleteObject(deleteObjectRequest);
             // 同时删除s3的数据
             LambdaQueryWrapper<ContentHubImages> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(ContentHubImages::getBucketName, bucketName).eq(ContentHubImages::getObjectKey, key);
+            queryWrapper.eq(ContentHubImages::getBucketName, bucketName)
+                    .eq(ContentHubImages::getBucketType, type)
+                    .eq(ContentHubImages::getObjectKey, key);
             dbFileService.remove(queryWrapper);
         } catch (SdkClientException e) {
             log.error("fileDelete bucketName = {}, key = {} ,error{}", bucketName, key, e);

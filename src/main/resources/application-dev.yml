@@ -24,4 +24,5 @@ content:
       access-key: access-key
       endpoint: https://s3.amazonaws.com
       regions: us-east-1
-      image-url: https://s3.amazonaws.com
+      image-url: http://localhost:9090/content/hub/api
+      local-path: localfile

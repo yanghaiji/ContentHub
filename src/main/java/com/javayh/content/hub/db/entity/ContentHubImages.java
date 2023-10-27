@@ -19,6 +19,11 @@ public class ContentHubImages {
     private Long id;
 
     /**
+     * 存储桶的类型
+     */
+    private String bucketType;
+
+    /**
      * 存储桶的名字
      */
     private String bucketName;
