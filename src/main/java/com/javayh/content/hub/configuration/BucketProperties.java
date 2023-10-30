@@ -51,6 +51,11 @@ public class BucketProperties {
     private BucketType bucketType;
 
     /**
+     * local 模式下的配置路径
+     */
+    private String localPath;
+
+    /**
      * 数据存储桶的类型
      */
     public enum BucketType {
@@ -60,6 +65,8 @@ public class BucketProperties {
         SOS,
 
         QINIU,
+
+        LOCAL,
 
         ;
     }

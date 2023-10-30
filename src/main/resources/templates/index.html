@@ -277,6 +277,28 @@
             background-color: #1244EF !important;
         }
 
+        /* 将选择框样式与整体协调 */
+        .layui-input-block select {
+            font-family: Arial, sans-serif;
+            color: rgba(51, 51, 51, 0.97);
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .layui-form-item {
+            margin-bottom: 0px;
+            clear: both;
+            *zoom: 1;
+        }
+
+        .layui-input-block {
+            margin-left: 0px;
+            min-height: 36px;
+        }
 
     </style>
 </head>
@@ -293,15 +315,15 @@
 </div>
 
 
-
-
 <div class="container" style="margin-left: 200px;">
 
     <div class="container">
-        <div class="layui-form">
-            <div class="layui-form-item">
+        <h1>Bucket Information</h1>
+
+        <div class="layui-form" style="display: grid; grid-template-columns: 1fr 1fr auto;">
+            <div class="layui-form-item" style="display: flex; align-items: center;">
                 <label class="layui-form-label">Bucket Type</label>
-                <div class="layui-input-block">
+                <div class="layui-input-block" style="width: 200px; margin-right: 10px;">
                     <select id="bucketType" name="bucketType" lay-filter="bucketTypeSelect">
                         <option value="">Select a bucket type</option>
                         <th:block th:each="type : ${types}">
@@ -310,16 +332,19 @@
                     </select>
                 </div>
             </div>
+
+            <div style="display: flex; align-items: center;">
+                <input type="text" id="searchKeyword" placeholder="Search..." class="layui-input" style="width: 250px; margin-right: 10px;">
+                <button id="searchButton" class="layui-btn layui-btn-normal">Search</button>
+            </div>
+
+            <div id="addButtonDiv" style="display: flex; align-items: center;">
+                <button id="addButton" class="layui-btn layui-btn-primary sci-fi-button">Add New</button>
+            </div>
         </div>
 
-        <h1>Bucket Information</h1>
-        <!-- Add New button -->
-        <input type="text" id="searchKeyword" placeholder="Search..." class="layui-input">
-        <button id="searchButton" class="layui-btn layui-btn-normal">Search</button>
 
-        <div id="addButtonDiv">
-            <button id="addButton" class="layui-btn layui-btn-primary sci-fi-button">Add New</button>
-        </div>
+
 
         <table class="layui-table">
             <thead>
@@ -341,8 +366,17 @@
     <div style="display: none;" id="addTemplate">
         <input type="text" id="bucketName" placeholder="Bucket Name" class="layui-input sci-fi-input"
                style="margin: 10px 0;"> <!-- 为输入框添加自定义类sci-fi-input -->
-        <input type="text" id="bucketTypeSource" placeholder="Bucket Type" class="layui-input sci-fi-input"
-               style="margin: 10px 0;"> <!-- 为输入框添加自定义类sci-fi-input -->
+        <!--        <input type="text" id="bucketTypeSource" placeholder="Bucket Type" class="layui-input sci-fi-input"-->
+        <!--               style="margin: 10px 0;"> &lt;!&ndash; 为输入框添加自定义类sci-fi-input &ndash;&gt;-->
+
+        <div class="layui-input-block" style="margin: 10px 0;">
+            <select id="bucketTypeSource" name="bucketType" lay-filter="bucketTypeSelect">
+                <option value="">Select a bucket type</option>
+                <th:block th:each="type : ${types}">
+                    <option th:text="${type}"></option>
+                </th:block>
+            </select>
+        </div>
         <!-- 文件上传按钮 -->
         <label for="fileInput" class="custom-file-input">Choose Files</label>
         <input type="file" id="fileInput" class="custom-file-input" multiple>
@@ -422,6 +456,22 @@
                 var typeSelect = $('#bucketType');
                 for (var i = 0; i < bucketTypes.length; i++) {
                     typeSelect.append('<option value="' + bucketTypes[i] + '">' + bucketTypes[i] + '</option>');
+                }
+                form.render('select');
+            },
+            error: function () {
+                console.error('Error fetching bucket types.');
+            }
+        });
+
+        $.ajax({
+            url: '/content/hub/api/db/bu/info',
+            type: 'GET',
+            success: function (data) {
+                var bucketTypes = data.data;
+                var bucketTypeSource = $('#bucketTypeSource');
+                for (var i = 0; i < bucketTypes.length; i++) {
+                    bucketTypeSource.append('<option value="' + bucketTypes[i] + '">' + bucketTypes[i] + '</option>');
                 }
                 form.render('select');
             },
