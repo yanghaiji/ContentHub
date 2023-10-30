@@ -26,3 +26,12 @@ content:
       regions: us-east-1
       image-url: http://localhost:9090/content/hub/api
       local-path: localfile
+
+
+---
+spring:
+  security:
+    user:
+      name: ContentHub
+      password: $2a$10$88Ibx5gqILdfQVotJQM.ceUkuinZ3kYU5YzSU0IxND4Cbhqnydgce
+
