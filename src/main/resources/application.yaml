@@ -7,8 +7,13 @@ server:
 spring:
   profiles:
     active: dev
-
-## mybatis 配置
+  resources:
+    cache:
+      period: 0
+  security:
+    user:
+      name: ContentHub
+      password: ContentHub
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
