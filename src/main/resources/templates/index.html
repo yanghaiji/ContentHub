@@ -299,6 +299,52 @@
             margin-left: 0px;
             min-height: 36px;
         }
+        /* 在CSS中为图片预览添加样式 */
+        #imagePreviewContainer {
+            display: none; /* 初始状态下隐藏预览容器 */
+            position: fixed;
+            top: 50%; /* 垂直居中 */
+            left: 50%; /* 水平居中 */
+            transform: translate(-50%, -50%); /* 使容器水平垂直居中 */
+            z-index: 9999; /* 确保在其他元素之上 */
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            max-width: 90%; /* 控制容器的最大宽度 */
+            max-height: 90%; /* 控制容器的最大高度 */
+            text-align: center;
+        }
+
+        #previewedImage {
+            max-width: 100%; /* 图片宽度不超过容器宽度 */
+            max-height: 100%; /* 图片高度不超过容器高度 */
+        }
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
     </style>
 </head>
@@ -383,6 +429,18 @@
         <div class="file-name-display" id="fileNameDisplay"></div>
 
     </div>
+
+    <!-- 图片预览-->
+    <div id="imagePreviewContainer" style="display: none;">
+        <img id="previewedImage" style="max-width: 100%; max-height: 100%; display: block; margin: 0 auto;">
+    </div>
+    <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+
+    <!--上传loading-->
+    <div id="loading" style="display: none;">
+        <div class="loader"></div>
+    </div>
+
 
 </div>
 
@@ -575,18 +633,6 @@
             });
         }
 
-        // Show image preview
-        function previewImage(imageUrl) {
-            layer.open({
-                type: 1,
-                title: false,
-                closeBtn: 1,
-                area: 'auto',
-                skin: 'layui-layer-nobg',
-                shadeClose: true,
-                content: '<img src="' + imageUrl + '" style="max-width: 100%; max-height: 100%;">'
-            });
-        }
 
         // Open the dialog when the "Add New" button is clicked
         $('#addButton').on('click', function () {
@@ -597,6 +643,7 @@
                 content: $('#addTemplate'),
                 btn: ['Confirm', 'Cancel'],
                 yes: function (index, layero) {
+                    showLoading(); // 显示加载状态
                     var bucketName = $('#bucketName').val();
                     var bucketTypeSource = $('#bucketTypeSource').val();
                     var files = document.getElementById('fileInput').files;
@@ -630,6 +677,7 @@
                                 console.error('Error uploading files.');
                             }
                         });
+                        hideLoading(); // 显示加载状态
                     }
                 }
             });
@@ -680,6 +728,46 @@
         $('.container').show();  // 隐藏原有内容
         $('#addTemplate').hide();  // 显示添加新内容的表单
     }
+
+    // 显示图片预览
+    function previewImage(imageUrl) {
+        var imagePreviewContainer = document.getElementById("imagePreviewContainer");
+        var previewedImage = document.getElementById("previewedImage");
+        var overlay = document.getElementById("overlay");
+
+        // 设置预览图片的 src 属性
+        previewedImage.src = imageUrl;
+
+        // 显示预览容器和覆盖层
+        imagePreviewContainer.style.display = "block";
+        overlay.style.display = "block";
+
+        // 点击预览图片时关闭预览
+        previewedImage.addEventListener("click", closePreview);
+
+        // 点击覆盖层时关闭预览
+        overlay.addEventListener("click", closePreview);
+    }
+
+    // 关闭图片预览
+    function closePreview() {
+        var imagePreviewContainer = document.getElementById("imagePreviewContainer");
+        var overlay = document.getElementById("overlay");
+
+        // 隐藏预览容器和覆盖层
+        imagePreviewContainer.style.display = "none";
+        overlay.style.display = "none";
+    }
+    // 在文件上传前显示loading元素
+    function showLoading() {
+        document.getElementById("loading").style.display = "block";
+    }
+
+    // 在文件上传完成后隐藏loading元素
+    function hideLoading() {
+        document.getElementById("loading").style.display = "none";
+    }
+
 </script>
 </body>
 </html>
