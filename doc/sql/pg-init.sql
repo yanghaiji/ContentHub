@@ -7,3 +7,14 @@ CREATE TABLE content_hub_images_config (
     description TEXT,
     create_time TIMESTAMP
 );
+
+CREATE TABLE content_hub_share_items_info (
+    id BIGSERIAL PRIMARY KEY,
+    selected_ids BIGINT[],
+    expiration INT,
+    share_url_prefix VARCHAR(1024),
+    link VARCHAR(1024),
+    encrypt VARCHAR(255),
+    expiration_time BIGINT,
+    create_time TIMESTAMPTZ
+);

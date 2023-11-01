@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <title>Content Hub</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/layui/2.6.0/css/layui.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    <style>
+        /* 基本页面样式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            margin: 20px auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+        }
+
+        /* 页面标题样式 */
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* 左侧导航栏样式 */
+        .sidebar {
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .menu {
+            padding: 20px;
+        }
+
+        .menu a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .menu a:hover {
+            background-color: #007BFF;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            margin: 20px auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .layui-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .layui-table td {
+            vertical-align: middle;
+        }
+
+        img {
+            max-width: 100px;
+            max-height: 100px;
+            cursor: pointer;
+        }
+
+        img:hover {
+            transform: scale(1.1);
+            transition: transform 0.3s;
+        }
+
+        .layui-layer .layui-layer-title {
+            background-color: #007BFF;
+            color: #fff; /* 设置标题文本颜色为白色 */
+            font-weight: bold;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            padding: 10px;
+        }
+
+
+        /* 侧边栏整体样式 */
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Logo 样式 */
+        .logo {
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 2px solid #fff; /* 添加底部白色线条 */
+        }
+
+        /* 导航菜单样式 */
+        .menu {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .menu-item {
+            display: block;
+            height: 40px;
+            line-height: 40px;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 10px 0;
+            background-color: #333; /* 默认背景颜色 */
+        }
+
+        .menu-item:hover {
+            background-color: #1244EF !important;
+        }
+
+        /* 将选择框样式与整体协调 */
+        .layui-input-block select {
+            font-family: Arial, sans-serif;
+            color: rgba(51, 51, 51, 0.97);
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+
+        /* 在CSS中为图片预览添加样式 */
+        #imagePreviewContainerShare {
+            display: none; /* 初始状态下隐藏预览容器 */
+            position: fixed;
+            top: 50%; /* 垂直居中 */
+            left: 50%; /* 水平居中 */
+            transform: translate(-50%, -50%); /* 使容器水平垂直居中 */
+            z-index: 9999; /* 确保在其他元素之上 */
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            max-width: 90%; /* 控制容器的最大宽度 */
+            max-height: 90%; /* 控制容器的最大高度 */
+            text-align: center;
+        }
+
+        #previewedImageShare {
+            max-width: 100%; /* 图片宽度不超过容器宽度 */
+            max-height: 100%; /* 图片高度不超过容器高度 */
+        }
+
+
+        /* 样式 for the modal backdrop */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000; /* 确保它覆盖整个页面 */
+        }
+
+        /* 样式 for the modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            max-width: 90%;
+            max-height: 90%;
+            text-align: center;
+            z-index: 1001; /* 确保它出现在背景之上 */
+            width: 300px;
+            height: 125px;
+        }
+
+        .pwdInput {
+            margin-top: 20px;
+            height: 32px;
+        }
+
+        .submitPasswordClass {
+            background-color: #3498db; /* 背景颜色 */
+            color: #fff; /* 文本颜色 */
+            padding: 10px 20px; /* 内边距 */
+            border: none; /* 去掉边框 */
+            border-radius: 5px; /* 圆角边框 */
+            cursor: pointer; /* 鼠标指针样式 */
+        }
+
+
+        /* Snackbar样式 */
+        .snackbar {
+            display: none;
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(67, 174, 106, 0.99);
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: #BAB7B7;
+            z-index: 9999; /* 设置一个较高的z-index值 */
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo">
+        Content Hub
+    </div>
+    <ul class="menu">
+        <li><a href="#" id="contentManagement" class="menu-item">Content Management</a></li>
+    </ul>
+</div>
+
+
+<div class="container" style="margin-left: 200px;">
+
+    <div class="container">
+        <h1 style="color: #3498db">Content Hub Share Info</h1>
+
+        <div class="layui-form" style="display: grid; grid-template-columns: 1fr 1fr auto;">
+
+            <div style="display: flex; align-items: center;">
+                <input type="text" id="searchKeyword" placeholder="Search..." class="layui-input"
+                       style="width: 250px; margin-right: 10px;">
+                <button id="searchButton" class="layui-btn layui-btn-primary sci-fi-button">Search</button>
+            </div>
+
+        </div>
+
+
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>Bucket Name</th>
+                <th>Object Key</th>
+                <th>Description</th>
+                <th>Image</th>
+            </tr>
+            </thead>
+            <tbody id="bucketDetails">
+            <!-- Data will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- 图片预览容器 -->
+    <div id="imagePreviewContainerShare" style="display: none;">
+        <img id="previewedImageShare" style="max-width: 100%; max-height: 100%; display: block; margin: 0 auto;">
+    </div>
+
+
+    <!-- 弹出密码验证框和背景 -->
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal" id="passwordModal">
+        <div class="modal-content">
+            <h2 style="margin-top: 15px">输入验证码</h2>
+            <input type="password" class="pwdInput" id="passwordInput" placeholder="密码">
+            <button id="submitPassword" class="submitPasswordClass">提交</button>
+        </div>
+    </div>
+
+    <div class="snackbar" id="snackbar">Verification failed, please re-enter!</div>
+
+</div>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/layui/2.6.0/layui.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const passwordModal = document.getElementById("passwordModal");
+        const modalBackdrop = document.getElementById("modalBackdrop");
+        const passwordInput = document.getElementById("passwordInput");
+        const submitButton = document.getElementById("submitPassword");
+
+        // 显示密码验证框和背景
+        passwordModal.style.display = "block";
+        modalBackdrop.style.display = "block";
+
+        // 当点击确认按钮时进行身份验证
+        submitButton.addEventListener("click", function () {
+            const password = passwordInput.value;
+            const urlParams = new URLSearchParams(window.location.search);
+            const i = urlParams.get("i");
+            // 发送 AJAX 请求进行身份验证
+            fetch(`/content/hub/api/share/verify?i=${i}&p=${password}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 200 && data.data === true) {
+                        closeModalAndBackdrop(); // 仅在验证成功时关闭弹窗和背景
+                        // 身份验证成功，加载数据
+                        loadData(i, password);
+                    } else {
+                        var snackbar = document.getElementById('snackbar');
+                        snackbar.style.display = 'block';
+
+                        // 2秒后隐藏Snackbar
+                        setTimeout(function () {
+                            snackbar.style.display = 'none';
+                        }, 2000);
+
+                        e.clearSelection();
+                    }
+                })
+                .catch(error => {
+                    console.error("错误:", error);
+                });
+        });
+    });
+
+    function closeModalAndBackdrop() {
+        const passwordModal = document.getElementById("passwordModal");
+        const modalBackdrop = document.getElementById("modalBackdrop");
+
+        passwordModal.style.display = "none";
+        modalBackdrop.style.display = "none";
+    }
+
+    function loadData(i, password) {
+        // 发送 AJAX 请求以获取和呈现数据
+        const urlParams = new URLSearchParams(window.location.search);
+        fetch(`/content/hub/api/share/list?i=${i}&p=${password}`)
+            .then(response => response.json())
+            .then(data => {
+                const bucketDetails = document.getElementById("bucketDetails");
+
+                data.data.forEach(item => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                    <td>${item.bucketName}</td>
+                    <td>${item.objectKey}</td>
+                    <td>${item.description}</td>
+                    <td><img src="${item.imageUrl}" alt="Image"  data-image-url="' + ${item.imageUrl} + '"></td>
+                `;
+                    bucketDetails.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error("错误:", error);
+            });
+        // 使用事件代理来绑定点击事件
+        document.addEventListener('click', function (event) {
+            if (event.target.tagName === 'IMG') {
+                var imageUrl = event.target.getAttribute('data-image-url');
+                previewImage(imageUrl);
+            }
+        });
+    }
+
+    // 显示图片预览
+    function previewImage(imageUrl) {
+        var imagePreviewContainerShare = document.getElementById("imagePreviewContainerShare");
+        var previewedImageShare = document.getElementById("previewedImageShare");
+
+        // 设置预览图片的 src 属性
+        previewedImageShare.src = imageUrl;
+
+        // 显示预览容器
+        imagePreviewContainerShare.style.display = "block";
+
+        // 点击预览图片时关闭预览
+        previewedImageShare.addEventListener("click", closePreview);
+    }
+
+    // 关闭图片预览
+    function closePreview() {
+        var imagePreviewContainerShare = document.getElementById("imagePreviewContainerShare");
+
+        // 隐藏预览容器
+        imagePreviewContainerShare.style.display = "none";
+    }
+</script>
+
+
+</body>
+</html>

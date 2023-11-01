@@ -56,6 +56,11 @@ public class BucketProperties {
     private String localPath;
 
     /**
+     * share url的前缀
+     */
+    private String shareUrlPrefix;
+
+    /**
      * 数据存储桶的类型
      */
     public enum BucketType {

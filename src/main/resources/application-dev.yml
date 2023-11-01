@@ -25,7 +25,8 @@ content:
       endpoint: https://s3.amazonaws.com
       regions: us-east-1
       image-url: http://localhost:9090/content/hub/api
-      local-path: localfile
+      local-path: C:\source_code\hub
+      share-url-prefix:  http://localhost:9090/content/hub/api/external/share?i=
 
 
 ---
