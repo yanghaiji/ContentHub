@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="zh">
 <head>
-    <title>Bucket Information</title>
+    <title>Content Hub</title>
     <link rel="stylesheet" href="https://cdn.bootcss.com/layui/2.6.0/css/layui.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
     <style>
         /* 基本页面样式 */
         body {
@@ -54,8 +55,7 @@
         .menu a:hover {
             background-color: #007BFF;
         }
-    </style>
-    <style>
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -97,6 +97,7 @@
             transform: scale(1.1);
             transition: transform 0.3s;
         }
+
         /* Using CSS styles to limit label text length and add ellipsis */
         .layui-form-label {
             white-space: nowrap;
@@ -226,8 +227,7 @@
             background-color: #FF0000;
             color: #fff;
         }
-    </style>
-    <style>
+
         /* 侧边栏整体样式 */
         .sidebar {
             width: 250px;
@@ -299,6 +299,7 @@
             margin-left: 0px;
             min-height: 36px;
         }
+
         /* 在CSS中为图片预览添加样式 */
         #imagePreviewContainer {
             display: none; /* 初始状态下隐藏预览容器 */
@@ -319,6 +320,7 @@
             max-width: 100%; /* 图片宽度不超过容器宽度 */
             max-height: 100%; /* 图片高度不超过容器高度 */
         }
+
         #loading {
             position: fixed;
             top: 0;
@@ -342,10 +344,209 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
+
+        /* 模态框内容 */
+        .modal-content {
+            background-color: #fff;
+            margin: 55% auto;
+            padding: 45px;
+            /* border: 1px solid #888; */
+            width: 60%;
+            box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* 标题样式 */
+        .modal-content h2 {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin: 10px 0;
+        }
+
+        /* 选择框样式 */
+        select.form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* 输入框样式 */
+        input.form-control {
+            width: 94%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* 分隔线 */
+        .divider {
+            border-top: 1px solid #ccc;
+            margin: 10px 0;
+        }
+
+        /* Share按钮样式 */
+        #shareItemsBtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            line-height: 1; /* 设置行高使文本垂直居中 */
+            margin-left: 322px;
+        }
+
+        #shareItemsBtn:hover {
+            background-color: #45a049;
+        }
+
+        .layui-btn-primary {
+            display: inline-block;
+            text-align: center;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+            line-height: 1; /* 设置行高使文本垂直居中 */
+        }
+
+        /* Style for the share result modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+
+        /* Style for the share result modal */
+        .shareResultModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 400px;
+        }
+
+
+        .shareResultModalContent {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 60%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+
+        /* 样式化复制按钮 */
+        .copy-button {
+            background-color: #3498db; /* 背景颜色 */
+            color: #fff; /* 文本颜色 */
+            padding: 10px 20px; /* 内边距 */
+            border: none; /* 去掉边框 */
+            border-radius: 5px; /* 圆角边框 */
+            cursor: pointer; /* 鼠标指针样式 */
+            margin-left: 920px;
+            margin-top: 20px;
+        }
+
+        /* 鼠标悬停时的样式 */
+        .copy-button:hover {
+            background-color: #0056b3; /* 鼠标悬停时的背景颜色 */
+        }
+
+        /* 分享结果文本样式 */
+        #shareResultText {
+            font-size: 16px;
+            color: white;
+            height: 80px;
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+        }
+
+        /* 分享结果文本样式 */
+        #shareResultTextDiv {
+            background-color: #C6C6CD; /* 背景颜色 */
+            height: 80px;
+            border-radius: 10px;
+            cursor: pointer; /* 鼠标指针样式 */
+            margin-top: 30px;
+        }
+
+        /* Snackbar样式 */
+        .snackbar {
+            display: none;
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(67, 174, 106, 0.99);
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: #BAB7B7;
+            z-index: 9999; /* 设置一个较高的z-index值 */
+        }
     </style>
 </head>
 <body>
@@ -364,7 +565,7 @@
 <div class="container" style="margin-left: 200px;">
 
     <div class="container">
-        <h1>Bucket Information</h1>
+        <h1 style="color: #3498db">Content Hub Images</h1>
 
         <div class="layui-form" style="display: grid; grid-template-columns: 1fr 1fr auto;">
             <div class="layui-form-item" style="display: flex; align-items: center;">
@@ -380,21 +581,22 @@
             </div>
 
             <div style="display: flex; align-items: center;">
-                <input type="text" id="searchKeyword" placeholder="Search..." class="layui-input" style="width: 250px; margin-right: 10px;">
-                <button id="searchButton" class="layui-btn layui-btn-normal">Search</button>
+                <input type="text" id="searchKeyword" placeholder="Search..." class="layui-input"
+                       style="width: 250px; margin-right: 10px;">
+                <button id="searchButton" class="layui-btn layui-btn-primary sci-fi-button">Search</button>
             </div>
 
             <div id="addButtonDiv" style="display: flex; align-items: center;">
                 <button id="addButton" class="layui-btn layui-btn-primary sci-fi-button">Add New</button>
+                <button id="shareButton" class="layui-btn layui-btn-primary sci-fi-button">Share</button>
             </div>
         </div>
-
-
 
 
         <table class="layui-table">
             <thead>
             <tr>
+                <th><input type="checkbox" id="selectAll"> Select All</th>
                 <th>Bucket Name</th>
                 <th>Object Key</th>
                 <th>Description</th>
@@ -434,13 +636,51 @@
     <div id="imagePreviewContainer" style="display: none;">
         <img id="previewedImage" style="max-width: 100%; max-height: 100%; display: block; margin: 0 auto;">
     </div>
-    <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+    <div id="overlay"
+         style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
 
     <!--上传loading-->
     <div id="loading" style="display: none;">
         <div class="loader"></div>
     </div>
 
+    <!-- Share模态框，初始状态下不可见 -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeShareModal">&times;</span>
+            <h2>Share Items</h2>
+            <form>
+                <div class="form-group">
+                    <label for="expiryTime">Expiration Time:</label>
+                    <select class="form-control" id="expiryTime">
+                        <option value="1">1 Day</option>
+                        <option value="7">7 Days</option>
+                        <option value="0">Never Expire</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="password">Encryption Password:</label>
+                    <input type="password" class="form-control" id="password">
+                </div>
+            </form>
+            <button id="shareItemsBtn" class="layui-btn layui-btn-primary">Share</button>
+        </div>
+    </div>
+
+
+    <!-- Add a div for the share result modal -->
+    <div id="shareResultModal" class="shareResultModal">
+        <div id="shareResultModalContent" class="shareResultModalContent">
+            <span class="close" id="closeShareResultModal">&times;</span>
+            <h2 style="color: #3498db">Share Result</h2>
+            <div id="shareResultTextDiv">
+                <p id="shareResultText">Share Link: [Link goes here] Encrypt Info: [Encrypt info goes here]</p>
+            </div>
+            <button id="copyResultButton" class="copy-button">Copy Result</button>
+        </div>
+    </div>
+
+    <div class="snackbar" id="snackbar">Result copied to clipboard!</div>
 
 </div>
 
@@ -553,87 +793,6 @@
             });
         });
 
-        // Display bucket details
-        function displayBucketDetails(data) {
-            var detailsHtml = '';
-            for (var i = 0; i < data.length; i++) {
-                detailsHtml += '<tr>';
-                detailsHtml += '<td>' + data[i].bucketName + '</td>';
-                detailsHtml += '<td>' + data[i].objectKey + '</td>';
-                detailsHtml += '<td>' + data[i].description + '</td>';
-                detailsHtml += '<td><img src="' + data[i].imageUrl + '" alt="Image" data-image-url="' + data[i].imageUrl + '"></td>';
-                detailsHtml += '<td><button class="delete-button" data-id="' + data[i].id + '" data-bucket-type="' + data[i].bucketType + '" data-bucket-name="' + data[i].bucketName + '" data-object-key="' + data[i].objectKey + '">Delete</button></td>';
-                detailsHtml += '</tr>';
-            }
-            $('#bucketDetails').html(detailsHtml);
-
-            // Bind click event to show image preview
-            $('img').on('click', function () {
-                var imageUrl = $(this).data('image-url');
-                previewImage(imageUrl);
-            });
-
-            // Bind click event to execute delete operation
-            // 绑定点击事件以执行删除操作
-            $('.delete-button').on('click', function () {
-                var id = $(this).data('id');
-                var bucketType = $(this).data('bucketType');
-                var bucketName = $(this).data('bucketName');
-                var objectKey = $(this).data('objectKey');
-                var confirmBox = '<div class="custom-confirm-box">';
-                confirmBox += '<div class="custom-confirm-title"></div>';
-                confirmBox += '<div class="custom-confirm-content">Are you sure you want to delete this item?</div>';
-                confirmBox += '<div class="custom-confirm-buttons">';
-                confirmBox += '<button class="confirm-button confirm-yes">Yes</button>';
-                confirmBox += '<button class="confirm-button confirm-no">No</button>';
-                confirmBox += '</div>';
-                confirmBox += '</div>';
-
-                // 打开自定义确认框
-                const index = layer.open({
-                    type: 1,
-                    title: false,
-                    closeBtn: false,
-                    area: 'auto',
-                    shadeClose: true,
-                    content: confirmBox
-                });
-
-                // 点击"Yes"按钮时执行删除操作
-                $('.confirm-yes').on('click', function () {
-                    deleteBucketItem(id, bucketType, bucketName, objectKey);
-                    layer.close(index); // 关闭确认框
-                });
-
-                // 点击"No"按钮时关闭确认框
-                $('.confirm-no').on('click', function () {
-                    layer.close(index); // 关闭确认框
-                });
-            });
-
-        }
-
-        // Delete bucket item
-        function deleteBucketItem(id, bucketType, bucketName, objectKey) {
-
-            $.ajax({
-                // url: '/content/hub/api/db/bu/del/' + id + '/' + encodedBucketType + '/' + encodedBucketName + '/' + encodedObjectKey,
-                url: '/content/hub/api/db/bu/del?id=' + id + "&bucketType=" + bucketType + "&bucketName=" + bucketName + '&objectKey=' + objectKey,
-                type: 'DELETE',
-                success: function (result) {
-                    if (result.code === 200) {
-                        refreshData();
-                    } else {
-                        alert('Delete operation failed: ' + result.message);
-                    }
-                },
-                error: function () {
-                    console.error('Error deleting bucket item.');
-                }
-            });
-        }
-
-
         // Open the dialog when the "Add New" button is clicked
         $('#addButton').on('click', function () {
             layer.open({
@@ -683,21 +842,272 @@
             });
         });
 
-        // Refresh data function
-        function refreshData() {
-            var selectedType = $('#bucketType').val();
-            $.ajax({
-                url: '/content/hub/api/db/bu/list?bucketType=' + selectedType,
-                type: 'GET',
-                success: function (data) {
-                    displayBucketDetails(data.data);
-                },
-                error: function () {
-                    console.error('Error fetching bucket details.');
-                }
+
+    });
+
+
+    // Display bucket details
+    function displayBucketDetails(data) {
+        var detailsHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            detailsHtml += '<tr>';
+            detailsHtml += '<td><input type="checkbox" class="select-checkbox" data-id="' + data[i].id + '"></td>';
+            detailsHtml += '<td>' + data[i].bucketName + '</td>';
+            detailsHtml += '<td>' + data[i].objectKey + '</td>';
+            detailsHtml += '<td>' + data[i].description + '</td>';
+            detailsHtml += '<td><img src="' + data[i].imageUrl + '" alt="Image" data-image-url="' + data[i].imageUrl + '"></td>';
+            detailsHtml += '<td><button class="delete-button" data-id="' + data[i].id + '" data-bucket-type="' + data[i].bucketType + '" data-bucket-name="' + data[i].bucketName + '" data-object-key="' + data[i].objectKey + '">Delete</button></td>';
+            detailsHtml += '</tr>';
+        }
+        $('#bucketDetails').html(detailsHtml);
+
+        // Bind click event to show image preview
+        $('img').on('click', function () {
+            var imageUrl = $(this).data('image-url');
+            previewImage(imageUrl);
+        });
+
+        // Bind click event to execute delete operation
+        // 绑定点击事件以执行删除操作
+        $('.delete-button').on('click', function () {
+            var id = $(this).data('id');
+            var bucketType = $(this).data('bucketType');
+            var bucketName = $(this).data('bucketName');
+            var objectKey = $(this).data('objectKey');
+            var confirmBox = '<div class="custom-confirm-box">';
+            confirmBox += '<div class="custom-confirm-title"></div>';
+            confirmBox += '<div class="custom-confirm-content">Are you sure you want to delete this item?</div>';
+            confirmBox += '<div class="custom-confirm-buttons">';
+            confirmBox += '<button class="confirm-button confirm-yes">Yes</button>';
+            confirmBox += '<button class="confirm-button confirm-no">No</button>';
+            confirmBox += '</div>';
+            confirmBox += '</div>';
+
+            // 打开自定义确认框
+            const index = layer.open({
+                type: 1,
+                title: false,
+                closeBtn: false,
+                area: 'auto',
+                shadeClose: true,
+                content: confirmBox
             });
+
+            // 点击"Yes"按钮时执行删除操作
+            $('.confirm-yes').on('click', function () {
+                deleteBucketItem(id, bucketType, bucketName, objectKey);
+                layer.close(index); // 关闭确认框
+            });
+
+            // 点击"No"按钮时关闭确认框
+            $('.confirm-no').on('click', function () {
+                layer.close(index); // 关闭确认框
+            });
+        });
+
+    }
+
+    // Delete bucket item
+    function deleteBucketItem(id, bucketType, bucketName, objectKey) {
+
+        $.ajax({
+            url: '/content/hub/api/db/bu/del?id=' + id + "&bucketType=" + bucketType + "&bucketName=" + bucketName + '&objectKey=' + objectKey,
+            type: 'DELETE',
+            success: function (result) {
+                if (result.code === 200) {
+                    refreshData();
+                } else {
+                    alert('Delete operation failed: ' + result.message);
+                }
+            },
+            error: function () {
+                console.error('Error deleting bucket item.');
+            }
+        });
+    }
+
+    // Refresh data function
+    function refreshData() {
+        var selectedType = $('#bucketType').val();
+        $.ajax({
+            url: '/content/hub/api/db/bu/list?bucketType=' + selectedType,
+            type: 'GET',
+            success: function (data) {
+                displayBucketDetails(data.data);
+            },
+            error: function () {
+                console.error('Error fetching bucket details.');
+            }
+        });
+    }
+
+    // 创建一个数组来存储选中的 ID
+    var selectedIds = [];
+
+    // 监听表头的全选复选框
+    var selectAllCheckbox = document.getElementById("selectAll");
+    selectAllCheckbox.addEventListener("change", function () {
+        var checkboxes = document.querySelectorAll(".select-checkbox");
+        selectedIds = []; // 清空已选中的 ID 数组
+
+        // 根据全选复选框的状态更新所有复选框的状态
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = selectAllCheckbox.checked;
+            var id = checkbox.getAttribute("data-id");
+            if (selectAllCheckbox.checked) {
+                selectedIds.push(id); // 如果全选，则添加 ID 到数组
+            }
+        });
+    });
+
+    // 监听复选框状态变化，更新选中的 ID
+    document.getElementById("bucketDetails").addEventListener("change", function (event) {
+        if (event.target && event.target.classList.contains("select-checkbox")) {
+            var checkbox = event.target;
+            var id = checkbox.getAttribute("data-id");
+
+            // 复选框被选中时，将 ID 添加到数组
+            if (checkbox.checked) {
+                selectedIds.push(id);
+            } else {
+                // 复选框被取消选中时，从数组中移除 ID
+                var index = selectedIds.indexOf(id);
+                if (index > -1) {
+                    selectedIds.splice(index, 1);
+                }
+            }
         }
     });
+
+    // 监听 "Share" 按钮的点击事件
+    document.getElementById("shareButton").addEventListener("click", function () {
+        var shareModal = document.getElementById("shareModal");
+        shareModal.style.display = "block"; // 显示模态框
+    });
+
+
+    // 初始化 Clipboard.js
+    var clipboard = new ClipboardJS('#copyResultButton', {
+        text: function () {
+            // 返回要复制的文本，这里使用弹出框中的文本
+            var shareResultText = document.getElementById("shareResultText");
+            return shareResultText.textContent;
+        }
+    });
+
+    // 监听复制成功事件
+    clipboard.on('success', function (e) {
+        // 复制成功后的提示
+        // alert('Result copied to clipboard!');
+        // 显示Snackbar
+        var snackbar = document.getElementById('snackbar');
+        snackbar.style.display = 'block';
+
+        // 2秒后隐藏Snackbar
+        setTimeout(function () {
+            snackbar.style.display = 'none';
+        }, 2000);
+
+        e.clearSelection();
+
+    });
+
+    // 监听分享操作成功后，显示分享结果的 modal
+    function showShareResultModal(shareLink, encryptInfo) {
+        var modal = document.getElementById("shareResultModal");
+        var resultText = document.getElementById("shareResultText");
+        resultText.innerHTML = "Share Link: " + shareLink + "  Encrypt Info: " + encryptInfo;
+        modal.style.display = "block";
+
+        // 关闭 modal 的按钮
+        var closeBtn = document.getElementById("closeShareResultModal");
+        closeBtn.onclick = function () {
+            modal.style.display = "none";
+        };
+    }
+
+
+    // 监听 "Share" 按钮模态框内的点击事件
+    document.getElementById("shareItemsBtn").addEventListener("click", function () {
+        // 获取过期时间、密码等数据
+        var expiryTime = document.getElementById("expiryTime").value;
+        var password = document.getElementById("password").value;
+
+        // 在这里，你可以执行分享操作，将 selectedIds 数组传递给后端接口
+        if (selectedIds.length > 0) {
+            // 将 selectedIds 数组、过期时间、密码传递给后端接口进行分享操作
+            var dataToSend = {
+                selectedIds: selectedIds,
+                expiration: expiryTime,
+                encrypt: password
+            };
+
+            $.ajax({
+                url: '/content/hub/api/share/bc',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(dataToSend),
+                success: function (result) {
+                    if (result.code === 200) {
+                        // 分享成功后，取消所有选择
+                        selectedIds = []; // 清空已选中的 ID 数组
+                        var shareModal = document.getElementById("shareModal");
+                        shareModal.style.display = "none"; // 隐藏模态框
+
+                        // 更新页面状态，例如刷新数据
+                        refreshData();
+
+                        // 显示分享结果的 modal
+                        showShareResultModal(result.data.link, result.data.encrypt);
+                    } else {
+                        alert('Share operation failed: ' + result.message);
+                    }
+                },
+                error: function () {
+                    console.error('Error sharing items.');
+                }
+            });
+        } else {
+            alert("Please select at least one item to share.");
+        }
+        // 分享成功后，关闭模态框并清除内容
+        document.getElementById("closeShareModal").click();
+        // 清除所有选择的复选框
+        clearAllCheckboxes();
+
+    });
+
+    // 监听关闭模态框按钮的点击事件
+    document.getElementById("closeShareModal").addEventListener("click", function () {
+        var shareModal = document.getElementById("shareModal");
+        shareModal.style.display = "none"; // 隐藏模态框
+        // 清除所有选择的复选框
+        clearAllCheckboxes();
+    });
+
+
+    // 监听"Close"按钮的点击事件，关闭模态框并清除内容
+    document.getElementById("closeShareModal").addEventListener("click", function () {
+        var modal = document.getElementById("shareModal");
+        modal.style.display = "none";
+
+        // 清除填写的内容
+        document.getElementById("expiryTime").value = "1"; // 设置默认选择
+        document.getElementById("password").value = ""; // 清除密码输入框
+    });
+
+    // 清除所有选择的复选框
+    function clearAllCheckboxes() {
+        var checkboxes = document.querySelectorAll(".select-checkbox");
+        var selectAllCheckbox = document.getElementById("selectAll");
+
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = false;
+        });
+        // 还需要取消全选按钮
+        selectAllCheckbox.checked = false;
+    }
+
 </script>
 <script>
     // JavaScript代码
@@ -758,6 +1168,7 @@
         imagePreviewContainer.style.display = "none";
         overlay.style.display = "none";
     }
+
     // 在文件上传前显示loading元素
     function showLoading() {
         document.getElementById("loading").style.display = "block";
@@ -769,5 +1180,6 @@
     }
 
 </script>
+
 </body>
 </html>
