@@ -23,8 +23,9 @@ public class ContentHubSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/external/share/**").permitAll()
                 .antMatchers("/share/list/**").permitAll()
-                .antMatchers("/external/share").permitAll()
+                .antMatchers("/external/box").permitAll()
                 .antMatchers("/share/verify").permitAll()
+                .antMatchers("/images").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 //开启表单登录

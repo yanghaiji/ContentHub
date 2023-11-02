@@ -22,8 +22,9 @@ public class IndexController {
     }
 
 
-    @GetMapping("/external/share")
-    public String share(@RequestParam(name = "i", required = false) String i, @RequestParam(name = "p", required = false) String p) {
+    @GetMapping("/external/box")
+    public String share(@RequestParam(name = "i", required = false) String i,
+                        @RequestParam(name = "p", required = false) String p) {
         return "share";
     }
 

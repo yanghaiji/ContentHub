@@ -42,3 +42,10 @@ mybatis-plus:
     aggressive-lazy-loading: true
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 
+secure:
+  transmit:
+    aes:
+      key: 57b4a91281accee28f832baddea3c317
+      iv: 2023110116
+    type: aes
+    enable: false
