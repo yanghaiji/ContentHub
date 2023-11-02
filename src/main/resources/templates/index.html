@@ -517,7 +517,7 @@
         #shareResultText {
             font-size: 16px;
             color: white;
-            height: 80px;
+            height: 130px;
             justify-content: center;
             display: flex;
             flex-direction: column;
@@ -527,7 +527,7 @@
         /* 分享结果文本样式 */
         #shareResultTextDiv {
             background-color: #C6C6CD; /* 背景颜色 */
-            height: 80px;
+            height: 130px;
             border-radius: 10px;
             cursor: pointer; /* 鼠标指针样式 */
             margin-top: 30px;
@@ -596,7 +596,7 @@
         <table class="layui-table">
             <thead>
             <tr>
-                <th><input type="checkbox" id="selectAll"> Select All</th>
+                <th style="width: 20px"><input type="checkbox" id="selectAll"></th>
                 <th>Bucket Name</th>
                 <th>Object Key</th>
                 <th>Description</th>
@@ -672,9 +672,9 @@
     <div id="shareResultModal" class="shareResultModal">
         <div id="shareResultModalContent" class="shareResultModalContent">
             <span class="close" id="closeShareResultModal">&times;</span>
-            <h2 style="color: #3498db">Share Result</h2>
+            <h2 style="color: #007BFF">Share Result</h2>
             <div id="shareResultTextDiv">
-                <p id="shareResultText">Share Link: [Link goes here] Encrypt Info: [Encrypt info goes here]</p>
+                <p style="align-content: center" id="shareResultText">Share Link: [Link goes here] Encrypt Info: [Encrypt info goes here]</p>
             </div>
             <button id="copyResultButton" class="copy-button">Copy Result</button>
         </div>
@@ -1016,7 +1016,7 @@
     function showShareResultModal(shareLink, encryptInfo) {
         var modal = document.getElementById("shareResultModal");
         var resultText = document.getElementById("shareResultText");
-        resultText.innerHTML = "Share Link: " + shareLink + "  Encrypt Info: " + encryptInfo;
+        resultText.innerHTML = "Share Link: " + shareLink + "<br> Encrypt Info: " + encryptInfo;
         modal.style.display = "block";
 
         // 关闭 modal 的按钮

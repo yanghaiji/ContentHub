@@ -251,6 +251,21 @@
             box-shadow: #BAB7B7;
             z-index: 9999; /* 设置一个较高的z-index值 */
         }
+
+        /* Snackbar样式 */
+        .snackbarResource {
+            display: none;
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(67, 174, 106, 0.99);
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: #BAB7B7;
+            z-index: 9999; /* 设置一个较高的z-index值 */
+        }
     </style>
 </head>
 <body>
@@ -268,18 +283,7 @@
 <div class="container" style="margin-left: 200px;">
 
     <div class="container">
-        <h1 style="color: #3498db">Content Hub Share Info</h1>
-
-        <div class="layui-form" style="display: grid; grid-template-columns: 1fr 1fr auto;">
-
-            <div style="display: flex; align-items: center;">
-                <input type="text" id="searchKeyword" placeholder="Search..." class="layui-input"
-                       style="width: 250px; margin-right: 10px;">
-                <button id="searchButton" class="layui-btn layui-btn-primary sci-fi-button">Search</button>
-            </div>
-
-        </div>
-
+        <h1 style="color: #3498db">Content Hub Share Box</h1>
 
         <table class="layui-table">
             <thead>
@@ -299,7 +303,7 @@
 
     <!-- 图片预览容器 -->
     <div id="imagePreviewContainerShare" style="display: none;">
-        <img id="previewedImageShare" style="max-width: 100%; max-height: 100%; display: block; margin: 0 auto;">
+        <img id="previewedImageShare" style="max-width: 100%; max-height: 100%; display: none; margin: 0 auto;">
     </div>
 
 
@@ -313,7 +317,8 @@
         </div>
     </div>
 
-    <div class="snackbar" id="snackbar">Verification failed, please re-enter!</div>
+    <div class="snackbar" id="snackbar">Verification failed, please re-enter.</div>
+    <div class="snackbarResource" id="snackbarResource">The resource does not exist or is expired.</div>
 
 </div>
 
@@ -373,22 +378,34 @@
 
     function loadData(i, password) {
         // 发送 AJAX 请求以获取和呈现数据
-        const urlParams = new URLSearchParams(window.location.search);
         fetch(`/content/hub/api/share/list?i=${i}&p=${password}`)
             .then(response => response.json())
             .then(data => {
-                const bucketDetails = document.getElementById("bucketDetails");
+                if(data.code === 200 ){
+                    const bucketDetails = document.getElementById("bucketDetails");
 
-                data.data.forEach(item => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
+                    data.data.forEach(item => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
                     <td>${item.bucketName}</td>
                     <td>${item.objectKey}</td>
                     <td>${item.description}</td>
-                    <td><img src="${item.imageUrl}" alt="Image"  data-image-url="' + ${item.imageUrl} + '"></td>
+                    <td><img src="${item.imageUrl}" alt="Image"  data-image-url="${item.imageUrl}"></td>
                 `;
-                    bucketDetails.appendChild(row);
-                });
+                        bucketDetails.appendChild(row);
+                    });
+                }else {
+                    var snackbar = document.getElementById('snackbarResource');
+                    snackbar.style.display = 'block';
+
+                    // 2秒后隐藏Snackbar
+                    setTimeout(function () {
+                        snackbar.style.display = 'none';
+                    }, 2000);
+
+                    e.clearSelection();
+                }
+
             })
             .catch(error => {
                 console.error("错误:", error);
@@ -412,9 +429,16 @@
 
         // 显示预览容器
         imagePreviewContainerShare.style.display = "block";
+        previewedImageShare.style.display = "block";
 
-        // 点击预览图片时关闭预览
-        previewedImageShare.addEventListener("click", closePreview);
+        // 点击页面任意地方时关闭图片预览
+        document.addEventListener("click", function (event) {
+            if (event.target === document.getElementById("imagePreviewContainerShare")
+                || event.target === document.getElementById("previewedImageShare")) {
+                // 当点击预览容器时关闭预览
+                closePreview();
+            }
+        });
     }
 
     // 关闭图片预览
